@@ -10,9 +10,9 @@ class DataModule(
 
     fun provideRepository(): PokemonRepository {
         val pokemonService = ProvidePokemonService.Base(coreModule).provide()
-        val handleError = HandleDomainError()
-        val pokemonCloudDataSource = PokemonCloudDataSource.Base(pokemonService, handleError)
+        val pokemonCloudDataSource = PokemonCloudDataSource.Base(pokemonService)
         val toDomainMapper = PokemonResponse.Mapper.ToDomain()
-        return BasePokemonRepository(pokemonCloudDataSource, toDomainMapper)
+        val handleError = HandleDomainError()
+        return BasePokemonRepository(pokemonCloudDataSource, toDomainMapper, handleError)
     }
 }
