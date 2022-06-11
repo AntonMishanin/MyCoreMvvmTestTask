@@ -19,7 +19,7 @@ class BasePokemonRepositoryTest : TestCase() {
         val pokemonRepository = DataModule(coreModule).provideRepository()
 
         runTest {
-            val list = pokemonRepository.fetchListOfPokemon(0, 20)
+            val list = pokemonRepository.requestListOfPokemon(0, 20)
 
             val expected = 20
             val actual = list.size
