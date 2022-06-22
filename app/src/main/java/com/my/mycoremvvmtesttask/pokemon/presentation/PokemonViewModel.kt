@@ -6,26 +6,39 @@ import com.github.johnnysc.coremvvm.presentation.*
 import com.github.johnnysc.coremvvm.presentation.adapter.ItemUi
 import com.my.mycoremvvmtesttask.pokemon.domain.PokemonInteractor
 import com.my.mycoremvvmtesttask.pokemon.domain.ResponseState
-import java.lang.IllegalStateException
 
 class PokemonViewModel(
     private val stateMapperFactory: StateMapperFactory,
-    pokemonInteractor: PokemonInteractor,
+    private val pokemonInteractor: PokemonInteractor,
     canGoBackCallback: CanGoBack.Callback,
     dispatchers: Dispatchers,
     communication: Communication.Mutable<List<ItemUi>>
-) : BackPress.ViewModel<List<ItemUi>>(
+) : RefreshPokemon, DeletePokemon, BackPress.ViewModel<List<ItemUi>>(
     canGoBackCallback,
     communication,
     dispatchers
 ) {
 
     init {
-        pokemonInteractor.fetchListOfPokemon(viewModelScope) { responseState ->
-            val mapper = stateMapperFactory.provide(responseState::class.java)
-            val stateUi = responseState.map(mapper)
-            communication.map(stateUi)
-        }
+        refreshPokemon()
+    }
+
+    override fun refreshPokemon() {
+        pokemonInteractor.fetchListOfPokemon(viewModelScope, ::handleResponseState)
+    }
+
+    override fun deletePokemonByName(name: String) {
+        pokemonInteractor.deletePokemonByName(name, viewModelScope, ::handleResponseState)
+    }
+
+    private fun handleResponseState(responseState: ResponseState) {
+        val mapper = stateMapperFactory.provide(
+            responseState::class.java,
+            refreshPokemon = this,
+            deletePokemon = this
+        )
+        val stateUi = responseState.map(mapper)
+        communication.map(stateUi)
     }
 
     override fun updateCallbacks() = Unit

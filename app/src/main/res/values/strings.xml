@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">MyCoreMvvmTestTask</string>
-    <string name="the_response_is_empty">The response is empty</string>
+    <string name="the_response_is_empty">The pokemon are empty</string>
     <string name="no_internet_connection">No internet connection</string>
     <string name="server_error_try_again">Server error. Try again</string>
+    <string name="refresh_pokemon">Refresh pokemon</string>
+    <string name="remove">Remove</string>
 </resources>
