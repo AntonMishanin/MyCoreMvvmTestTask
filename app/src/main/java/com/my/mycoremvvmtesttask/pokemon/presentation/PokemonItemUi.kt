@@ -18,24 +18,36 @@ data class PokemonItemUi(
     override fun type() = 4
 }
 
-class NoInternetErrorItemUi : ItemUi {
+class NoInternetErrorItemUi(
+    private val fetchPokemon: FetchPokemon
+) : ItemUi {
 
     override fun content() = id()
 
     override fun id() = "NoInternetError"
 
-    override fun show(vararg views: MyView) = Unit
+    override fun show(vararg views: MyView) {
+        views[0].handleClick {
+            fetchPokemon.fetchPokemon()
+        }
+    }
 
     override fun type() = 3
 }
 
-class ServerErrorItemUi : ItemUi {
+class ServerErrorItemUi(
+    private val fetchPokemon: FetchPokemon
+) : ItemUi {
 
     override fun content() = id()
 
     override fun id() = "ServerError"
 
-    override fun show(vararg views: MyView) = Unit
+    override fun show(vararg views: MyView) {
+        views[0].handleClick {
+            fetchPokemon.fetchPokemon()
+        }
+    }
 
     override fun type() = 2
 }
@@ -51,13 +63,19 @@ class ProgressItemUi : ItemUi {
     override fun type() = 1
 }
 
-class EmptyItemUi : ItemUi {
+class EmptyItemUi(
+    private val fetchPokemon: FetchPokemon
+) : ItemUi {
 
     override fun content() = id()
 
     override fun id() = "Empty"
 
-    override fun show(vararg views: MyView) = Unit
+    override fun show(vararg views: MyView) {
+        views[0].handleClick {
+            fetchPokemon.fetchPokemon()
+        }
+    }
 
     override fun type() = 0
 }

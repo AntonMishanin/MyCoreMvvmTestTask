@@ -7,25 +7,29 @@ import com.my.mycoremvvmtesttask.pokemon.domain.PokemonDomain
 import com.my.mycoremvvmtesttask.pokemon.domain.ResponseState
 import java.lang.IllegalStateException
 
-class SuccessStateMapper : ResponseState.Mapper<PokemonDomain, List<ItemUi>> {
+class SuccessStateMapper(
+    private val fetchPokemon: FetchPokemon
+) : ResponseState.Mapper<PokemonDomain, List<ItemUi>> {
 
     override fun map(input: PokemonDomain): List<ItemUi> {
         val pokemonDomainMapper = PokemonDomain.Mapper.ToList()
         val list = input.map(pokemonDomainMapper)
 
         return when (list.isEmpty()) {
-            true -> listOf(EmptyItemUi())
+            true -> listOf(EmptyItemUi(fetchPokemon))
             false -> list.map(::PokemonItemUi)
         }
     }
 }
 
-class ErrorStateMapper : ResponseState.Mapper<Exception, List<ItemUi>> {
+class ErrorStateMapper(
+    private val fetchPokemon: FetchPokemon
+) : ResponseState.Mapper<Exception, List<ItemUi>> {
 
     override fun map(input: Exception): List<ItemUi> {
         return when (input) {
-            is NoInternetConnectionException -> listOf(NoInternetErrorItemUi())
-            is ServiceUnavailableException -> listOf(ServerErrorItemUi())
+            is NoInternetConnectionException -> listOf(NoInternetErrorItemUi(fetchPokemon))
+            is ServiceUnavailableException -> listOf(ServerErrorItemUi(fetchPokemon))
             else -> throw IllegalStateException("Unknown exception")
         }
     }
@@ -40,11 +44,14 @@ class ProgressStateMapper : ResponseState.Mapper<Any, List<ItemUi>> {
 
 class StateMapperFactory {
 
-    fun <T : ResponseState> provide(clazz: Class<T>): ResponseState.Mapper<*, List<ItemUi>> =
+    fun <T : ResponseState> provide(
+        clazz: Class<T>,
+        fetchPokemon: FetchPokemon
+    ): ResponseState.Mapper<*, List<ItemUi>> =
         when (clazz) {
             ResponseState.Progress::class.java -> ProgressStateMapper()
-            ResponseState.Error::class.java -> ErrorStateMapper()
-            ResponseState.Success::class.java -> SuccessStateMapper()
+            ResponseState.Error::class.java -> ErrorStateMapper(fetchPokemon)
+            ResponseState.Success::class.java -> SuccessStateMapper(fetchPokemon)
             else -> throw IllegalArgumentException()
         }
 }
