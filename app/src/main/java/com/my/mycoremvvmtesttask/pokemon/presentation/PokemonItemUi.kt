@@ -3,64 +3,83 @@ package com.my.mycoremvvmtesttask.pokemon.presentation
 import com.github.johnnysc.coremvvm.presentation.adapter.ItemUi
 import com.github.johnnysc.coremvvm.presentation.adapter.MyView
 
-interface PokemonItemUi {
+data class PokemonItemUi(
+    private val name: String,
+    private val deletePokemon: DeletePokemon
+) : ItemUi {
 
-    data class Pokemon(
-        private val name: String
-    ) : PokemonItemUi, ItemUi {
+    override fun content() = id()
 
-        override fun content() = name
+    override fun id() = name
 
-        override fun id() = name
-
-        override fun show(vararg views: MyView) {
-            views[0].show(name)
+    override fun show(vararg views: MyView) {
+        views[0].show(name)
+        views[1].handleClick {
+            deletePokemon.deletePokemonByName(name)
         }
-
-        override fun type() = 4
     }
 
-    class NoInternetError : PokemonItemUi, ItemUi {
+    override fun type() = 4
+}
 
-        override fun content() = "NoInternetError"
+class NoInternetErrorItemUi(
+    private val refreshPokemon: RefreshPokemon
+) : ItemUi {
 
-        override fun id() = "NoInternetError"
+    override fun content() = id()
 
-        override fun show(vararg views: MyView) = Unit
+    override fun id() = "NoInternetError"
 
-        override fun type() = 3
+    override fun show(vararg views: MyView) {
+        views[0].handleClick {
+            refreshPokemon.refreshPokemon()
+        }
     }
 
-    class ServerError : PokemonItemUi, ItemUi {
+    override fun type() = 3
+}
 
-        override fun content() = "ServerError"
+class ServerErrorItemUi(
+    private val refreshPokemon: RefreshPokemon
+) : ItemUi {
 
-        override fun id() = "ServerError"
+    override fun content() = id()
 
-        override fun show(vararg views: MyView) = Unit
+    override fun id() = "ServerError"
 
-        override fun type() = 2
+    override fun show(vararg views: MyView) {
+        views[0].handleClick {
+            refreshPokemon.refreshPokemon()
+        }
     }
 
-    class Progress : PokemonItemUi, ItemUi {
+    override fun type() = 2
+}
 
-        override fun content() = "Progress"
+class ProgressItemUi : ItemUi {
 
-        override fun id() = "Progress"
+    override fun content() = id()
 
-        override fun show(vararg views: MyView) = Unit
+    override fun id() = "Progress"
 
-        override fun type() = 1
+    override fun show(vararg views: MyView) = Unit
+
+    override fun type() = 1
+}
+
+class EmptyItemUi(
+    private val refreshPokemon: RefreshPokemon
+) : ItemUi {
+
+    override fun content() = id()
+
+    override fun id() = "Empty"
+
+    override fun show(vararg views: MyView) {
+        views[0].handleClick {
+            refreshPokemon.refreshPokemon()
+        }
     }
 
-    class Empty : PokemonItemUi, ItemUi {
-
-        override fun content() = "Empty"
-
-        override fun id() = "Empty"
-
-        override fun show(vararg views: MyView) = Unit
-
-        override fun type() = 0
-    }
+    override fun type() = 0
 }

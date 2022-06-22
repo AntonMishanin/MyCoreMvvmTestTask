@@ -11,6 +11,12 @@ interface PokemonInteractor {
         result: (ResponseState) -> Unit
     ): Job
 
+    fun deletePokemonByName(
+        name: String,
+        coroutineScope: CoroutineScope,
+        result: (ResponseState) -> Unit
+    ): Job
+
     class Base(
         private val pokemonRepository: PokemonRepository,
         private val paginationConfig: PaginationConfig,
@@ -24,12 +30,23 @@ interface PokemonInteractor {
 
             dispatchers.changeToUI { result.invoke(ResponseState.Progress()) }
 
-            val responseState = pokemonRepository.requestListOfPokemon(
+            val responseState = pokemonRepository.requestFreshPokemon(
                 offset = paginationConfig.offset(),
                 limit = paginationConfig.limit()
             )
 
             dispatchers.changeToUI { result.invoke(responseState) }
+        }
+
+        override fun deletePokemonByName(
+            name: String,
+            coroutineScope: CoroutineScope,
+            result: (ResponseState) -> Unit
+        ) = dispatchers.launchUI(coroutineScope) {
+
+            pokemonRepository.deleteByName(name)
+
+            result(pokemonRepository.requestCachedPokemon())
         }
     }
 }
