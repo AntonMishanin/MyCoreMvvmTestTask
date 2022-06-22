@@ -14,7 +14,10 @@ class EmptyViewHolder(parent: ViewGroup) : RefreshViewHolder(parent, R.layout.it
 class PokemonViewHolder(parent: ViewGroup) : AbstractViewHolder(parent, R.layout.item_pokemon) {
 
     override fun bind(item: ItemUi) {
-        item.show(itemView.findViewById<MyTextView>(R.id.name))
+        item.show(
+            itemView.findViewById<MyTextView>(R.id.name),
+            itemView.findViewById<MyTextView>(R.id.remove)
+        )
     }
 }
 

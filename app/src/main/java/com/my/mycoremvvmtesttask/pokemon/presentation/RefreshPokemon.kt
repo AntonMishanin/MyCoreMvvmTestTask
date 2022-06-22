@@ -1,6 +1,6 @@
 package com.my.mycoremvvmtesttask.pokemon.presentation
 
-interface FetchPokemon {
+interface RefreshPokemon {
 
-    fun fetchPokemon()
+    fun refreshPokemon()
 }

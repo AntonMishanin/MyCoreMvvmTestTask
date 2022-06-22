@@ -4,7 +4,8 @@ import com.github.johnnysc.coremvvm.presentation.adapter.ItemUi
 import com.github.johnnysc.coremvvm.presentation.adapter.MyView
 
 data class PokemonItemUi(
-    private val name: String
+    private val name: String,
+    private val deletePokemon: DeletePokemon
 ) : ItemUi {
 
     override fun content() = id()
@@ -13,13 +14,16 @@ data class PokemonItemUi(
 
     override fun show(vararg views: MyView) {
         views[0].show(name)
+        views[1].handleClick {
+            deletePokemon.deletePokemonByName(name)
+        }
     }
 
     override fun type() = 4
 }
 
 class NoInternetErrorItemUi(
-    private val fetchPokemon: FetchPokemon
+    private val refreshPokemon: RefreshPokemon
 ) : ItemUi {
 
     override fun content() = id()
@@ -28,7 +32,7 @@ class NoInternetErrorItemUi(
 
     override fun show(vararg views: MyView) {
         views[0].handleClick {
-            fetchPokemon.fetchPokemon()
+            refreshPokemon.refreshPokemon()
         }
     }
 
@@ -36,7 +40,7 @@ class NoInternetErrorItemUi(
 }
 
 class ServerErrorItemUi(
-    private val fetchPokemon: FetchPokemon
+    private val refreshPokemon: RefreshPokemon
 ) : ItemUi {
 
     override fun content() = id()
@@ -45,7 +49,7 @@ class ServerErrorItemUi(
 
     override fun show(vararg views: MyView) {
         views[0].handleClick {
-            fetchPokemon.fetchPokemon()
+            refreshPokemon.refreshPokemon()
         }
     }
 
@@ -64,7 +68,7 @@ class ProgressItemUi : ItemUi {
 }
 
 class EmptyItemUi(
-    private val fetchPokemon: FetchPokemon
+    private val refreshPokemon: RefreshPokemon
 ) : ItemUi {
 
     override fun content() = id()
@@ -73,7 +77,7 @@ class EmptyItemUi(
 
     override fun show(vararg views: MyView) {
         views[0].handleClick {
-            fetchPokemon.fetchPokemon()
+            refreshPokemon.refreshPokemon()
         }
     }
 

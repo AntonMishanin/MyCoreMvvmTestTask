@@ -13,6 +13,12 @@ class DataModule(
         val pokemonCloudDataSource = PokemonCloudDataSource.Base(pokemonService)
         val toDomainMapper = PokemonResponse.Mapper.ToDomain()
         val handleError = HandleDomainError()
-        return BasePokemonRepository(pokemonCloudDataSource, toDomainMapper, handleError)
+        val cashedDataSource = PokemonCacheDataSource.Base()
+        return BasePokemonRepository(
+            pokemonCloudDataSource,
+            toDomainMapper,
+            handleError,
+            cashedDataSource
+        )
     }
 }
