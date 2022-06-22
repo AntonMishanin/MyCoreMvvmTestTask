@@ -3,64 +3,61 @@ package com.my.mycoremvvmtesttask.pokemon.presentation
 import com.github.johnnysc.coremvvm.presentation.adapter.ItemUi
 import com.github.johnnysc.coremvvm.presentation.adapter.MyView
 
-interface PokemonItemUi {
+data class PokemonItemUi(
+    private val name: String
+) : ItemUi {
 
-    data class Pokemon(
-        private val name: String
-    ) : PokemonItemUi, ItemUi {
+    override fun content() = name
 
-        override fun content() = name
+    override fun id() = name
 
-        override fun id() = name
-
-        override fun show(vararg views: MyView) {
-            views[0].show(name)
-        }
-
-        override fun type() = 4
+    override fun show(vararg views: MyView) {
+        views[0].show(name)
     }
 
-    class NoInternetError : PokemonItemUi, ItemUi {
+    override fun type() = 4
+}
 
-        override fun content() = "NoInternetError"
+class NoInternetErrorItemUi : ItemUi {
 
-        override fun id() = "NoInternetError"
+    override fun content() = "NoInternetError"
 
-        override fun show(vararg views: MyView) = Unit
+    override fun id() = "NoInternetError"
 
-        override fun type() = 3
-    }
+    override fun show(vararg views: MyView) = Unit
 
-    class ServerError : PokemonItemUi, ItemUi {
+    override fun type() = 3
+}
 
-        override fun content() = "ServerError"
+class ServerErrorItemUi : ItemUi {
 
-        override fun id() = "ServerError"
+    override fun content() = "ServerError"
 
-        override fun show(vararg views: MyView) = Unit
+    override fun id() = "ServerError"
 
-        override fun type() = 2
-    }
+    override fun show(vararg views: MyView) = Unit
 
-    class Progress : PokemonItemUi, ItemUi {
+    override fun type() = 2
+}
 
-        override fun content() = "Progress"
+class ProgressItemUi : ItemUi {
 
-        override fun id() = "Progress"
+    override fun content() = "Progress"
 
-        override fun show(vararg views: MyView) = Unit
+    override fun id() = "Progress"
 
-        override fun type() = 1
-    }
+    override fun show(vararg views: MyView) = Unit
 
-    class Empty : PokemonItemUi, ItemUi {
+    override fun type() = 1
+}
 
-        override fun content() = "Empty"
+class EmptyItemUi : ItemUi {
 
-        override fun id() = "Empty"
+    override fun content() = "Empty"
 
-        override fun show(vararg views: MyView) = Unit
+    override fun id() = "Empty"
 
-        override fun type() = 0
-    }
+    override fun show(vararg views: MyView) = Unit
+
+    override fun type() = 0
 }

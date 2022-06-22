@@ -14,8 +14,8 @@ class SuccessStateMapper : ResponseState.Mapper<PokemonDomain, List<ItemUi>> {
         val list = input.map(pokemonDomainMapper)
 
         return when (list.isEmpty()) {
-            true -> listOf(PokemonItemUi.Empty())
-            false -> list.map { PokemonItemUi.Pokemon(it) }
+            true -> listOf(EmptyItemUi())
+            false -> list.map(::PokemonItemUi)
         }
     }
 }
@@ -24,8 +24,8 @@ class ErrorStateMapper : ResponseState.Mapper<Exception, List<ItemUi>> {
 
     override fun map(input: Exception): List<ItemUi> {
         return when (input) {
-            is NoInternetConnectionException -> listOf(PokemonItemUi.NoInternetError())
-            is ServiceUnavailableException -> listOf(PokemonItemUi.ServerError())
+            is NoInternetConnectionException -> listOf(NoInternetErrorItemUi())
+            is ServiceUnavailableException -> listOf(ServerErrorItemUi())
             else -> throw IllegalStateException("Unknown exception")
         }
     }
@@ -34,7 +34,7 @@ class ErrorStateMapper : ResponseState.Mapper<Exception, List<ItemUi>> {
 class ProgressStateMapper : ResponseState.Mapper<Any, List<ItemUi>> {
 
     override fun map(input: Any): List<ItemUi> {
-        return listOf(PokemonItemUi.Progress())
+        return listOf(ProgressItemUi())
     }
 }
 
