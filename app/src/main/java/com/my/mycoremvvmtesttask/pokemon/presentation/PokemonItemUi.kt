@@ -7,7 +7,7 @@ data class PokemonItemUi(
     private val name: String
 ) : ItemUi {
 
-    override fun content() = name
+    override fun content() = id()
 
     override fun id() = name
 
@@ -20,7 +20,7 @@ data class PokemonItemUi(
 
 class NoInternetErrorItemUi : ItemUi {
 
-    override fun content() = "NoInternetError"
+    override fun content() = id()
 
     override fun id() = "NoInternetError"
 
@@ -31,7 +31,7 @@ class NoInternetErrorItemUi : ItemUi {
 
 class ServerErrorItemUi : ItemUi {
 
-    override fun content() = "ServerError"
+    override fun content() = id()
 
     override fun id() = "ServerError"
 
@@ -42,7 +42,7 @@ class ServerErrorItemUi : ItemUi {
 
 class ProgressItemUi : ItemUi {
 
-    override fun content() = "Progress"
+    override fun content() = id()
 
     override fun id() = "Progress"
 
@@ -53,7 +53,7 @@ class ProgressItemUi : ItemUi {
 
 class EmptyItemUi : ItemUi {
 
-    override fun content() = "Empty"
+    override fun content() = id()
 
     override fun id() = "Empty"
 
