@@ -1,52 +1,46 @@
 package com.my.mycoremvvmtesttask.pokemon.domain
 
 import com.github.johnnysc.coremvvm.core.Dispatchers
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Job
+import com.github.johnnysc.coremvvm.data.HandleError
+import com.github.johnnysc.coremvvm.domain.Interactor
 
 interface PokemonInteractor {
 
-    fun fetchListOfPokemon(
-        coroutineScope: CoroutineScope,
-        result: (ResponseState) -> Unit
-    ): Job
+    suspend fun fetchListOfPokemon(
+        atFinish: suspend () -> Unit,
+        result: suspend (ResponseState) -> Unit
+    )
 
-    fun deletePokemon(
+    suspend fun deletePokemon(
         name: String,
-        coroutineScope: CoroutineScope,
-        result: (ResponseState) -> Unit
-    ): Job
+        atFinish: suspend () -> Unit = {},
+        result: suspend (ResponseState) -> Unit
+    )
 
     class Base(
         private val pokemonRepository: PokemonRepository,
         private val paginationConfig: PaginationConfig,
-        private val dispatchers: Dispatchers
-    ) : PokemonInteractor {
+        handleError: HandleError,
+        dispatchers: Dispatchers
+    ) : Interactor.Abstract(dispatchers, handleError), PokemonInteractor {
 
-        override fun fetchListOfPokemon(
-            coroutineScope: CoroutineScope,
-            result: (ResponseState) -> Unit
-        ) = dispatchers.launchBackground(coroutineScope) {
-
-            dispatchers.changeToUI { result.invoke(ResponseState.Progress()) }
-
-            val responseState = pokemonRepository.requestFreshPokemon(
+        override suspend fun fetchListOfPokemon(
+            atFinish: suspend () -> Unit,
+            result: suspend (ResponseState) -> Unit
+        ) = handle(result, atFinish) {
+            return@handle pokemonRepository.requestFreshPokemon(
                 offset = paginationConfig.offset(),
                 limit = paginationConfig.limit()
             )
-
-            dispatchers.changeToUI { result.invoke(responseState) }
         }
 
-        override fun deletePokemon(
+        override suspend fun deletePokemon(
             name: String,
-            coroutineScope: CoroutineScope,
-            result: (ResponseState) -> Unit
-        ) = dispatchers.launchUI(coroutineScope) {
-
+            atFinish: suspend () -> Unit,
+            result: suspend (ResponseState) -> Unit
+        ) = handle(result, atFinish) {
             pokemonRepository.deletePokemon(name)
-
-            result(pokemonRepository.requestCachedPokemon())
+            return@handle pokemonRepository.requestCachedPokemon()
         }
     }
 }

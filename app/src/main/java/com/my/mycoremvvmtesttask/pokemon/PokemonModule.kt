@@ -1,5 +1,6 @@
 package com.my.mycoremvvmtesttask.pokemon
 
+import com.github.johnnysc.coremvvm.domain.HandleDomainError
 import com.github.johnnysc.coremvvm.sl.CoreModule
 import com.github.johnnysc.coremvvm.sl.Module
 import com.my.mycoremvvmtesttask.pokemon.data.DataModule
@@ -17,8 +18,13 @@ class PokemonModule(
         val pokemonRepository = DataModule(coreModule).provideRepository()
         val paginationConfig = PaginationConfig.Base()
         val dispatchers = coreModule.dispatchers()
-        val pokemonInteractor =
-            PokemonInteractor.Base(pokemonRepository, paginationConfig, dispatchers)
+        val handleDomainError = HandleDomainError()
+        val pokemonInteractor = PokemonInteractor.Base(
+            pokemonRepository,
+            paginationConfig,
+            handleDomainError,
+            dispatchers
+        )
         val pokemonCommunication = PokemonCommunication.Base()
         val stateMapperFactory = StateMapperFactory()
 

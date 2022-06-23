@@ -1,6 +1,5 @@
 package com.my.mycoremvvmtesttask.pokemon.presentation
 
-import androidx.lifecycle.viewModelScope
 import com.github.johnnysc.coremvvm.core.Dispatchers
 import com.github.johnnysc.coremvvm.presentation.*
 import com.github.johnnysc.coremvvm.presentation.adapter.ItemUi
@@ -19,16 +18,32 @@ class PokemonViewModel(
     dispatchers
 ) {
 
+    private var canGoBack = true
+
+    private val atFinish = suspend {
+        canGoBack = true
+    }
+
+    private val canGoBackCallbackInner = object : CanGoBack {
+        override fun canGoBack() = canGoBack
+    }
+
     init {
+        canGoBack = false
+
         refreshPokemon()
     }
 
     override fun refreshPokemon() {
-        pokemonInteractor.fetchListOfPokemon(viewModelScope, ::handleResponseState)
+        handle {
+            pokemonInteractor.fetchListOfPokemon(atFinish, ::handleResponseState)
+        }
     }
 
     override fun deletePokemon(name: String) {
-        pokemonInteractor.deletePokemon(name, viewModelScope, ::handleResponseState)
+        handle {
+            pokemonInteractor.deletePokemon(name, result = ::handleResponseState)
+        }
     }
 
     private fun handleResponseState(responseState: ResponseState) {
@@ -41,5 +56,6 @@ class PokemonViewModel(
         communication.map(stateUi)
     }
 
-    override fun updateCallbacks() = Unit
+    override fun updateCallbacks() =
+        canGoBackCallback.updateCallback(canGoBackCallbackInner)
 }
