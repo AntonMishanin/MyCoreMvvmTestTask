@@ -1,7 +1,6 @@
 package com.my.mycoremvvmtesttask.pokemon.data
 
 import com.github.johnnysc.coremvvm.data.HandleError
-import com.github.johnnysc.coremvvm.domain.ServiceUnavailableException
 import com.my.mycoremvvmtesttask.pokemon.domain.ResponseState
 
 interface Repository {
@@ -16,6 +15,8 @@ interface Repository {
             try {
                 block.invoke()
             } catch (exception: Exception) {
+                exception.printStackTrace()
+
                 val e = handleError.handle(exception)
                 ResponseState.Error(
                     message = e.message.toString(),
