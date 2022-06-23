@@ -11,7 +11,7 @@ class BasePokemonUiMapper(
     private val refreshPokemon: RefreshPokemon,
     private val deletePokemon: DeletePokemon,
     private val pokemonDomainMapper: PokemonDomain.Mapper.ToList
-) : ResponseState.Mapper<Any, List<ItemUi>> {
+) : ResponseState.Mapper<List<ItemUi>> {
 
     override fun map(input: Any): List<ItemUi> {
         return when (input) {

@@ -5,22 +5,20 @@ import com.my.mycoremvvmtesttask.pokemon.domain.ResponseState
 
 interface Repository {
 
-    suspend fun handle(block: suspend () -> ResponseState<*>): ResponseState<*>
+    suspend fun handle(block: suspend () -> ResponseState): ResponseState
 
     abstract class Abstract(
         private val handleError: HandleError
     ) : Repository {
 
-        override suspend fun handle(block: suspend () -> ResponseState<*>): ResponseState<*> {
+        override suspend fun handle(block: suspend () -> ResponseState): ResponseState {
             return try {
                 block.invoke()
             } catch (exception: Exception) {
                 exception.printStackTrace()
 
-                val e = handleError.handle(exception)
-                ResponseState.Error(
-                    exception = e
-                )
+                val domainException = handleError.handle(exception)
+                ResponseState.Error(exception = domainException)
             }
         }
     }

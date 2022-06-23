@@ -7,7 +7,7 @@ import com.my.mycoremvvmtesttask.pokemon.domain.PokemonRepository
 
 class BasePokemonRepository(
     private val pokemonCloudDataSource: PokemonCloudDataSource,
-    private val toDomainMapper: PokemonResponse.Mapper<ResponseState<PokemonDomain>>,
+    private val toDomainMapper: PokemonResponse.Mapper<ResponseState>,
     handleError: HandleError,
     private val cacheDataSource: PokemonCacheDataSource.Mutable
 ) : Repository.Abstract(handleError), PokemonRepository {
