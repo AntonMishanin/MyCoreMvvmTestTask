@@ -15,7 +15,7 @@ data class PokemonItemUi(
     override fun show(vararg views: MyView) {
         views[0].show(name)
         views[1].handleClick {
-            deletePokemon.deletePokemonByName(name)
+            deletePokemon.deletePokemon(name)
         }
     }
 

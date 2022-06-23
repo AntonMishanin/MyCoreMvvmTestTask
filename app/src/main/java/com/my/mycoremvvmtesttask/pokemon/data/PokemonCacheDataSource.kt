@@ -17,10 +17,9 @@ interface PokemonCacheDataSource {
 
         override fun read() = data
 
-        // Todo: think about thread safe
-        override fun deleteByName(name: String) {
-            val results = data.removeByNameIfFind(name)
-            val newData = (data as? PokemonResponse.Base)?.copy(results = results) ?: return
+        override fun delete(name: String) {
+            val results = data.deleteIfMatches(name)
+            val newData = data.copy(results = results)
             save(newData)
         }
     }
@@ -28,5 +27,5 @@ interface PokemonCacheDataSource {
 
 interface Delete {
 
-    fun deleteByName(name: String)
+    fun delete(name: String)
 }

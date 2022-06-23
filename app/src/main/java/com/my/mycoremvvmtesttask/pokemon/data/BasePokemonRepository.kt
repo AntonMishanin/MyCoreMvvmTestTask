@@ -1,6 +1,7 @@
 package com.my.mycoremvvmtesttask.pokemon.data
 
 import com.github.johnnysc.coremvvm.data.HandleError
+import com.my.mycoremvvmtesttask.pokemon.domain.PokemonDomain
 import com.my.mycoremvvmtesttask.pokemon.domain.ResponseState
 import com.my.mycoremvvmtesttask.pokemon.domain.PokemonRepository
 
@@ -19,5 +20,5 @@ class BasePokemonRepository(
 
     override suspend fun requestCachedPokemon() = cacheDataSource.read().map(toDomainMapper)
 
-    override suspend fun deleteByName(name: String) = cacheDataSource.deleteByName(name)
+    override suspend fun deletePokemon(name: String) = cacheDataSource.delete(name)
 }

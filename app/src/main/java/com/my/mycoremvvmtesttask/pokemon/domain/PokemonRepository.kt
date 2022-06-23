@@ -6,5 +6,5 @@ interface PokemonRepository {
 
     suspend fun requestCachedPokemon(): ResponseState
 
-    suspend fun deleteByName(name: String)
+    suspend fun deletePokemon(name: String)
 }
