@@ -4,6 +4,7 @@ import com.github.johnnysc.coremvvm.core.Dispatchers
 import com.github.johnnysc.coremvvm.presentation.*
 import com.github.johnnysc.coremvvm.presentation.adapter.ItemUi
 import com.my.mycoremvvmtesttask.pokemon.domain.PokemonInteractor
+import com.my.mycoremvvmtesttask.pokemon.domain.ResponseState
 
 class PokemonViewModel(
     refreshPokemon: Observe<Unit>,
@@ -29,24 +30,21 @@ class PokemonViewModel(
         override fun canGoBack() = canGoBack
     }
 
+    private val result: suspend (ResponseState) -> Unit = { responseState ->
+        val uiState = responseState.map(pokemonUiMapper)
+        communication.map(uiState)
+    }
+
     init {
         canGoBack = false
 
         refreshPokemon.observe {
             communication.map(listOf(ProgressItemUi()))
-            handle {
-                pokemonInteractor.fetchListOfPokemon(
-                    atFinish,
-                    { communication.map(it.map(pokemonUiMapper)) })
-            }
+            handle { pokemonInteractor.fetchListOfPokemon(atFinish, result) }
         }
 
         deletePokemon.observe { name ->
-            handle {
-                pokemonInteractor.deletePokemon(
-                    name,
-                    result = { communication.map(it.map(pokemonUiMapper)) })
-            }
+            handle { pokemonInteractor.deletePokemon(name, result = result) }
         }
     }
 
