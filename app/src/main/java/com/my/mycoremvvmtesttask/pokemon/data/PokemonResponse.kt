@@ -8,9 +8,9 @@ interface PokemonResponse {
 
     fun <T : Any> map(mapper: Mapper<T>): T
 
-    fun removeByNameIfFind(name: String): List<PokemonResult>
+    fun removeByNameIfFind(name: String): List<PokemonResult.Base>
 
-    fun copy(results: List<PokemonResult>): PokemonResponse
+    fun copy(results: List<PokemonResult.Base>): PokemonResponse
 
     data class Base(
         @SerializedName("count")
@@ -20,14 +20,14 @@ interface PokemonResponse {
         @SerializedName("previous")
         private val previous: String?,
         @SerializedName("results")
-        private val results: List<PokemonResult>
+        private val results: List<PokemonResult.Base>
     ) : PokemonResponse {
 
         override fun <T : Any> map(mapper: Mapper<T>): T {
             return mapper.map(count, next, previous, results)
         }
 
-        override fun removeByNameIfFind(name: String): List<PokemonResult> {
+        override fun removeByNameIfFind(name: String): List<PokemonResult.Base> {
             for (i in results.indices) {
                 if (results[i].equalsByName(name)) {
 
@@ -39,7 +39,7 @@ interface PokemonResponse {
             return results
         }
 
-        override fun copy(results: List<PokemonResult>): PokemonResponse {
+        override fun copy(results: List<PokemonResult.Base>): PokemonResponse {
             return Base(count, next, previous, results)
         }
     }
@@ -50,9 +50,9 @@ interface PokemonResponse {
             return mapper.map(count = 0, next = "", previous = "", emptyList())
         }
 
-        override fun removeByNameIfFind(name: String) = emptyList<PokemonResult>()
+        override fun removeByNameIfFind(name: String) = emptyList<PokemonResult.Base>()
 
-        override fun copy(results: List<PokemonResult>) = Empty()
+        override fun copy(results: List<PokemonResult.Base>) = Empty()
     }
 
     interface Mapper<out T : Any> {
