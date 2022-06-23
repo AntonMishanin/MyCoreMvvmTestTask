@@ -8,7 +8,9 @@ interface PokemonResponse {
 
     fun <T : Any> map(mapper: Mapper<T>): T
 
-    fun removeByNameIfFind(name: String): List<PokemonResult.Base>
+    fun deleteIfMatches(name: String): List<PokemonResult.Base>
+
+    fun copy(results: List<PokemonResult.Base>): PokemonResponse
 
     data class Base(
         @SerializedName("count")
@@ -25,16 +27,20 @@ interface PokemonResponse {
             return mapper.map(count, next, previous, results)
         }
 
-        override fun removeByNameIfFind(name: String): List<PokemonResult.Base> {
-            for (i in results.indices) {
-                if (results[i].equalsByName(name)) {
+        override fun deleteIfMatches(name: String): List<PokemonResult.Base> {
+            val mutableResults = results.toMutableList()
 
-                    val result = results.toMutableList()
-                    result.removeAt(i)
-                    return result
+            for (i in results.indices) {
+                if (results[i].matches(name)) {
+                    mutableResults.removeAt(i)
                 }
             }
-            return results
+
+            return mutableResults
+        }
+
+        override fun copy(results: List<PokemonResult.Base>): PokemonResponse {
+            return Base(count, next, previous, results)
         }
     }
 
@@ -44,7 +50,9 @@ interface PokemonResponse {
             return mapper.map(count = 0, next = "", previous = "", emptyList())
         }
 
-        override fun removeByNameIfFind(name: String) = emptyList<PokemonResult.Base>()
+        override fun deleteIfMatches(name: String) = emptyList<PokemonResult.Base>()
+
+        override fun copy(results: List<PokemonResult.Base>) = Empty()
     }
 
     interface Mapper<out T : Any> {
@@ -58,7 +66,7 @@ interface PokemonResponse {
                 next: String?,
                 previous: String?,
                 results: List<PokemonResult>
-            ): ResponseState {
+            ): ResponseState{
                 val mapper = PokemonResult.Mapper.ToDomain()
                 val listOfPokemon = results.map { it.map(mapper) }
                 val value = PokemonDomain.Base(listOfPokemon)
@@ -72,7 +80,7 @@ interface PokemonResult {
 
     fun <T : Any> map(mapper: Mapper<T>): T
 
-    fun equalsByName(name: String): Boolean
+    fun matches(name: String): Boolean
 
     data class Base(
         @SerializedName("name")
@@ -85,7 +93,7 @@ interface PokemonResult {
             return mapper.map(name, url)
         }
 
-        override fun equalsByName(name: String): Boolean {
+        override fun matches(name: String): Boolean {
             return this.name == name
         }
     }
