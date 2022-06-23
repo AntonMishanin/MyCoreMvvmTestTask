@@ -29,8 +29,8 @@ interface PokemonResponse {
 
         override fun removeByNameIfFind(name: String): List<PokemonResult.Base> {
             for (i in results.indices) {
-                if (results[i].equalsByName(name)) {
 
+                if (results[i].equals(name)) {
                     val mutableResults = results.toMutableList()
                     mutableResults.removeAt(i)
                     return mutableResults
@@ -80,7 +80,7 @@ interface PokemonResult {
 
     fun <T : Any> map(mapper: Mapper<T>): T
 
-    fun equalsByName(name: String): Boolean
+    fun equals(name: String): Boolean
 
     data class Base(
         @SerializedName("name")
@@ -93,7 +93,7 @@ interface PokemonResult {
             return mapper.map(name, url)
         }
 
-        override fun equalsByName(name: String): Boolean {
+        override fun equals(name: String): Boolean {
             return this.name == name
         }
     }
