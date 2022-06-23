@@ -8,7 +8,7 @@ interface PokemonResponse {
 
     fun <T : Any> map(mapper: Mapper<T>): T
 
-    fun removeByNameIfFind(name: String): List<PokemonResult.Base>
+    fun deletePokemonIfFind(name: String): List<PokemonResult.Base>
 
     fun copy(results: List<PokemonResult.Base>): PokemonResponse
 
@@ -27,7 +27,7 @@ interface PokemonResponse {
             return mapper.map(count, next, previous, results)
         }
 
-        override fun removeByNameIfFind(name: String): List<PokemonResult.Base> {
+        override fun deletePokemonIfFind(name: String): List<PokemonResult.Base> {
             for (i in results.indices) {
 
                 if (results[i].equals(name)) {
@@ -50,7 +50,7 @@ interface PokemonResponse {
             return mapper.map(count = 0, next = "", previous = "", emptyList())
         }
 
-        override fun removeByNameIfFind(name: String) = emptyList<PokemonResult.Base>()
+        override fun deletePokemonIfFind(name: String) = emptyList<PokemonResult.Base>()
 
         override fun copy(results: List<PokemonResult.Base>) = Empty()
     }

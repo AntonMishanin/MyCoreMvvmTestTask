@@ -19,5 +19,5 @@ class BasePokemonRepository(
 
     override suspend fun requestCachedPokemon() = cacheDataSource.read().map(toDomainMapper)
 
-    override suspend fun deleteByName(name: String) = cacheDataSource.deleteByName(name)
+    override suspend fun deletePokemon(name: String) = cacheDataSource.delete(name)
 }

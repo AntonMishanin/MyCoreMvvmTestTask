@@ -11,7 +11,7 @@ interface PokemonInteractor {
         result: (ResponseState) -> Unit
     ): Job
 
-    fun deletePokemonByName(
+    fun deletePokemon(
         name: String,
         coroutineScope: CoroutineScope,
         result: (ResponseState) -> Unit
@@ -38,13 +38,13 @@ interface PokemonInteractor {
             dispatchers.changeToUI { result.invoke(responseState) }
         }
 
-        override fun deletePokemonByName(
+        override fun deletePokemon(
             name: String,
             coroutineScope: CoroutineScope,
             result: (ResponseState) -> Unit
         ) = dispatchers.launchUI(coroutineScope) {
 
-            pokemonRepository.deleteByName(name)
+            pokemonRepository.deletePokemon(name)
 
             result(pokemonRepository.requestCachedPokemon())
         }

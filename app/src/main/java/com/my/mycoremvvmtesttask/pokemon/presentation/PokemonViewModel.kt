@@ -27,8 +27,8 @@ class PokemonViewModel(
         pokemonInteractor.fetchListOfPokemon(viewModelScope, ::handleResponseState)
     }
 
-    override fun deletePokemonByName(name: String) {
-        pokemonInteractor.deletePokemonByName(name, viewModelScope, ::handleResponseState)
+    override fun deletePokemon(name: String) {
+        pokemonInteractor.deletePokemon(name, viewModelScope, ::handleResponseState)
     }
 
     private fun handleResponseState(responseState: ResponseState) {

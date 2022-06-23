@@ -17,8 +17,8 @@ interface PokemonCacheDataSource {
 
         override fun read() = data
 
-        override fun deleteByName(name: String) {
-            val results = data.removeByNameIfFind(name)
+        override fun delete(name: String) {
+            val results = data.deletePokemonIfFind(name)
             val newData = data.copy(results = results)
             save(newData)
         }
@@ -27,5 +27,5 @@ interface PokemonCacheDataSource {
 
 interface Delete {
 
-    fun deleteByName(name: String)
+    fun delete(name: String)
 }
