@@ -35,6 +35,7 @@ class PokemonViewModel(
     }
 
     override fun refreshPokemon() {
+        communication.map(listOf(ProgressItemUi()))
         handle {
             pokemonInteractor.fetchListOfPokemon(atFinish, ::handleResponseState)
         }
