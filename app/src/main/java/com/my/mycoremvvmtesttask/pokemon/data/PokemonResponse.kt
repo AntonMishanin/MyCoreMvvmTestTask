@@ -8,7 +8,7 @@ interface PokemonResponse {
 
     fun <T : Any> map(mapper: Mapper<T>): T
 
-    fun deletePokemonIfFind(name: String): List<PokemonResult.Base>
+    fun deleteIfMatches(name: String): List<PokemonResult.Base>
 
     fun copy(results: List<PokemonResult.Base>): PokemonResponse
 
@@ -27,16 +27,16 @@ interface PokemonResponse {
             return mapper.map(count, next, previous, results)
         }
 
-        override fun deletePokemonIfFind(name: String): List<PokemonResult.Base> {
-            for (i in results.indices) {
+        override fun deleteIfMatches(name: String): List<PokemonResult.Base> {
+            val mutableResults = results.toMutableList()
 
-                if (results[i].equals(name)) {
-                    val mutableResults = results.toMutableList()
+            for (i in results.indices) {
+                if (results[i].matches(name)) {
                     mutableResults.removeAt(i)
-                    return mutableResults
                 }
             }
-            return results
+
+            return mutableResults
         }
 
         override fun copy(results: List<PokemonResult.Base>): PokemonResponse {
@@ -50,7 +50,7 @@ interface PokemonResponse {
             return mapper.map(count = 0, next = "", previous = "", emptyList())
         }
 
-        override fun deletePokemonIfFind(name: String) = emptyList<PokemonResult.Base>()
+        override fun deleteIfMatches(name: String) = emptyList<PokemonResult.Base>()
 
         override fun copy(results: List<PokemonResult.Base>) = Empty()
     }
@@ -80,7 +80,7 @@ interface PokemonResult {
 
     fun <T : Any> map(mapper: Mapper<T>): T
 
-    fun equals(name: String): Boolean
+    fun matches(name: String): Boolean
 
     data class Base(
         @SerializedName("name")
@@ -93,7 +93,7 @@ interface PokemonResult {
             return mapper.map(name, url)
         }
 
-        override fun equals(name: String): Boolean {
+        override fun matches(name: String): Boolean {
             return this.name == name
         }
     }

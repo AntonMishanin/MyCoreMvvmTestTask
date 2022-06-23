@@ -18,7 +18,7 @@ interface PokemonCacheDataSource {
         override fun read() = data
 
         override fun delete(name: String) {
-            val results = data.deletePokemonIfFind(name)
+            val results = data.deleteIfMatches(name)
             val newData = data.copy(results = results)
             save(newData)
         }
