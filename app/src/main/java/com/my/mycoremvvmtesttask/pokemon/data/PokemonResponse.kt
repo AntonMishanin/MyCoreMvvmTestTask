@@ -59,14 +59,14 @@ interface PokemonResponse {
 
         fun map(count: Int, next: String?, previous: String?, results: List<PokemonResult>): T
 
-        class ToDomain : Mapper<ResponseState> {
+        class ToDomain : Mapper<ResponseState<PokemonDomain>> {
 
             override fun map(
                 count: Int,
                 next: String?,
                 previous: String?,
                 results: List<PokemonResult>
-            ): ResponseState {
+            ): ResponseState<PokemonDomain> {
                 val mapper = PokemonResult.Mapper.ToDomain()
                 val listOfPokemon = results.map { it.map(mapper) }
                 val value = PokemonDomain.Base(listOfPokemon)

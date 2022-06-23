@@ -4,11 +4,14 @@ import com.github.johnnysc.coremvvm.domain.HandleDomainError
 import com.github.johnnysc.coremvvm.sl.CoreModule
 import com.github.johnnysc.coremvvm.sl.Module
 import com.my.mycoremvvmtesttask.pokemon.data.DataModule
+import com.my.mycoremvvmtesttask.pokemon.presentation.DeletePokemon
 import com.my.mycoremvvmtesttask.pokemon.domain.PaginationConfig
+import com.my.mycoremvvmtesttask.pokemon.domain.PokemonDomain
 import com.my.mycoremvvmtesttask.pokemon.domain.PokemonInteractor
+import com.my.mycoremvvmtesttask.pokemon.presentation.RefreshPokemon
+import com.my.mycoremvvmtesttask.pokemon.presentation.BasePokemonUiMapper
 import com.my.mycoremvvmtesttask.pokemon.presentation.PokemonCommunication
 import com.my.mycoremvvmtesttask.pokemon.presentation.PokemonViewModel
-import com.my.mycoremvvmtesttask.pokemon.presentation.StateMapperFactory
 
 class PokemonModule(
     private val coreModule: CoreModule
@@ -26,10 +29,15 @@ class PokemonModule(
             dispatchers
         )
         val pokemonCommunication = PokemonCommunication.Base()
-        val stateMapperFactory = StateMapperFactory()
+        val refreshPokemon = RefreshPokemon.Base()
+        val deletePokemon = DeletePokemon.Base()
+        val pokemonUiMapper =
+            BasePokemonUiMapper(refreshPokemon, deletePokemon, PokemonDomain.Mapper.ToList())
 
         return PokemonViewModel(
-            stateMapperFactory,
+            refreshPokemon,
+            deletePokemon,
+            pokemonUiMapper,
             pokemonInteractor,
             coreModule.provideCanGoBack(),
             dispatchers,

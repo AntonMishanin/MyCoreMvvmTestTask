@@ -1,32 +1,24 @@
 package com.my.mycoremvvmtesttask.pokemon.domain
 
-interface ResponseState {
+interface ResponseState<I : Any> {
 
-    fun <I : Any, R : Any> map(mapper: Mapper<I, R>): R
+    fun <R : Any> map(mapper: Mapper<I, R>): R
 
-    data class Success<in T : Any>(
-        private val input: T
-    ) : ResponseState {
+    data class Success<I : Any>(
+        private val input: I
+    ) : ResponseState<I> {
 
-        override fun <I : Any, R : Any> map(mapper: Mapper<I, R>): R {
-            return mapper.map(input as I)
+        override fun <R : Any> map(mapper: Mapper<I, R>): R {
+            return mapper.map(input)
         }
     }
 
     data class Error(
-        private val message: String,
         private val exception: Exception
-    ) : ResponseState {
+    ) : ResponseState<Exception> {
 
-        override fun <I : Any, R : Any> map(mapper: Mapper<I, R>): R {
-            return mapper.map(exception as I)
-        }
-    }
-
-    class Progress : ResponseState {
-
-        override fun <I : Any, R : Any> map(mapper: Mapper<I, R>): R {
-            return mapper.map(Unit as I)
+        override fun <R : Any> map(mapper: Mapper<Exception, R>): R {
+            return mapper.map(exception)
         }
     }
 

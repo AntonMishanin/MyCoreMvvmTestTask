@@ -1,12 +1,13 @@
 package com.my.mycoremvvmtesttask.pokemon.data
 
 import com.github.johnnysc.coremvvm.data.HandleError
+import com.my.mycoremvvmtesttask.pokemon.domain.PokemonDomain
 import com.my.mycoremvvmtesttask.pokemon.domain.ResponseState
 import com.my.mycoremvvmtesttask.pokemon.domain.PokemonRepository
 
 class BasePokemonRepository(
     private val pokemonCloudDataSource: PokemonCloudDataSource,
-    private val toDomainMapper: PokemonResponse.Mapper<ResponseState>,
+    private val toDomainMapper: PokemonResponse.Mapper<ResponseState<PokemonDomain>>,
     handleError: HandleError,
     private val cacheDataSource: PokemonCacheDataSource.Mutable
 ) : Repository.Abstract(handleError), PokemonRepository {
