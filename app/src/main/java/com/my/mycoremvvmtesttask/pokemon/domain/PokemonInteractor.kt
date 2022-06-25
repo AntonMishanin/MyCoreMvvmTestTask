@@ -28,7 +28,7 @@ interface PokemonInteractor {
             atFinish: suspend () -> Unit,
             result: suspend (PokemonDomain) -> Unit
         ) = handle(result, atFinish) {
-            return@handle pokemonRepository.requestFreshPokemon(paginationConfig)
+            pokemonRepository.requestFreshPokemon(paginationConfig)
         }
 
         override suspend fun deletePokemon(
@@ -37,7 +37,7 @@ interface PokemonInteractor {
             result: suspend (PokemonDomain) -> Unit
         ) = handle(result, atFinish) {
             pokemonRepository.deletePokemon(name)
-            return@handle pokemonRepository.requestCachedPokemon()
+            pokemonRepository.requestCachedPokemon()
         }
     }
 }
