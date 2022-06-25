@@ -1,21 +1,18 @@
 package com.my.mycoremvvmtesttask.pokemon.data
 
-import com.github.johnnysc.coremvvm.data.HandleError
 import com.my.mycoremvvmtesttask.pokemon.domain.PokemonDomain
-import com.my.mycoremvvmtesttask.pokemon.domain.ResponseState
 import com.my.mycoremvvmtesttask.pokemon.domain.PokemonRepository
 
 class BasePokemonRepository(
     private val pokemonCloudDataSource: PokemonCloudDataSource,
-    private val toDomainMapper: PokemonResponse.Mapper<ResponseState>,
-    handleError: HandleError,
+    private val toDomainMapper: PokemonResponse.Mapper<PokemonDomain>,
     private val cacheDataSource: PokemonCacheDataSource.Mutable
-) : Repository.Abstract(handleError), PokemonRepository {
+) : PokemonRepository {
 
-    override suspend fun requestFreshPokemon(offset: Int, limit: Int) = handle {
+    override suspend fun requestFreshPokemon(offset: Int, limit: Int): PokemonDomain {
         val cloud = pokemonCloudDataSource.requestListOfPokemon(offset, limit)
         cacheDataSource.save(cloud)
-        cloud.map(toDomainMapper)
+        return cloud.map(toDomainMapper)
     }
 
     override suspend fun requestCachedPokemon() = cacheDataSource.read().map(toDomainMapper)
