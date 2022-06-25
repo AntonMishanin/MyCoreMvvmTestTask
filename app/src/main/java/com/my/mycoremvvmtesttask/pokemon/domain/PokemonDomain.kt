@@ -15,13 +15,6 @@ interface PokemonDomain {
 
     interface Mapper<out T : Any> {
 
-        fun map(names: List<String>): T
-
-        class ToList : Mapper<List<String>> {
-
-            override fun map(names: List<String>): List<String> {
-                return names
-            }
-        }
+        fun map(input: List<String>): T
     }
 }

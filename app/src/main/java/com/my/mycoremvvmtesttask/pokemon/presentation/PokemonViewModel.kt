@@ -3,13 +3,13 @@ package com.my.mycoremvvmtesttask.pokemon.presentation
 import com.github.johnnysc.coremvvm.core.Dispatchers
 import com.github.johnnysc.coremvvm.presentation.*
 import com.github.johnnysc.coremvvm.presentation.adapter.ItemUi
+import com.my.mycoremvvmtesttask.pokemon.domain.PokemonDomain
 import com.my.mycoremvvmtesttask.pokemon.domain.PokemonInteractor
-import com.my.mycoremvvmtesttask.pokemon.domain.ResponseState
 
 class PokemonViewModel(
     refreshPokemon: Observe<Unit>,
     deletePokemon: Observe<String>,
-    pokemonUiMapper: BasePokemonUiMapper,
+    pokemonUiMapper: PokemonDomain.Mapper<List<ItemUi>>,
     pokemonInteractor: PokemonInteractor,
     canGoBackCallback: CanGoBack.Callback,
     dispatchers: Dispatchers,
@@ -30,7 +30,7 @@ class PokemonViewModel(
         override fun canGoBack() = canGoBack
     }
 
-    private val result: suspend (ResponseState) -> Unit = { responseState ->
+    private val result: suspend (PokemonDomain) -> Unit = { responseState ->
         val uiState = responseState.map(pokemonUiMapper)
         communication.map(uiState)
     }
