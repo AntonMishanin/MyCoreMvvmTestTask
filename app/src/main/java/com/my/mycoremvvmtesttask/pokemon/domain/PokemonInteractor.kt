@@ -8,13 +8,13 @@ interface PokemonInteractor {
 
     suspend fun fetchListOfPokemon(
         atFinish: suspend () -> Unit,
-        result: suspend (ResponseState) -> Unit
+        result: suspend (PokemonDomain) -> Unit
     )
 
     suspend fun deletePokemon(
         name: String,
         atFinish: suspend () -> Unit = {},
-        result: suspend (ResponseState) -> Unit
+        result: suspend (PokemonDomain) -> Unit
     )
 
     class Base(
@@ -26,21 +26,18 @@ interface PokemonInteractor {
 
         override suspend fun fetchListOfPokemon(
             atFinish: suspend () -> Unit,
-            result: suspend (ResponseState) -> Unit
+            result: suspend (PokemonDomain) -> Unit
         ) = handle(result, atFinish) {
-            return@handle pokemonRepository.requestFreshPokemon(
-                offset = paginationConfig.offset(),
-                limit = paginationConfig.limit()
-            )
+            pokemonRepository.requestFreshPokemon(paginationConfig)
         }
 
         override suspend fun deletePokemon(
             name: String,
             atFinish: suspend () -> Unit,
-            result: suspend (ResponseState) -> Unit
+            result: suspend (PokemonDomain) -> Unit
         ) = handle(result, atFinish) {
             pokemonRepository.deletePokemon(name)
-            return@handle pokemonRepository.requestCachedPokemon()
+            pokemonRepository.requestCachedPokemon()
         }
     }
 }

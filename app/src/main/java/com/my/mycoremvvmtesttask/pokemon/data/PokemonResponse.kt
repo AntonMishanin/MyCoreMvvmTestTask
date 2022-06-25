@@ -1,7 +1,6 @@
 package com.my.mycoremvvmtesttask.pokemon.data
 
 import com.google.gson.annotations.SerializedName
-import com.my.mycoremvvmtesttask.pokemon.domain.ResponseState
 import com.my.mycoremvvmtesttask.pokemon.domain.PokemonDomain
 
 interface PokemonResponse {
@@ -59,18 +58,17 @@ interface PokemonResponse {
 
         fun map(count: Int, next: String?, previous: String?, results: List<PokemonResult>): T
 
-        class ToDomain : Mapper<ResponseState> {
+        class ToDomain : Mapper<PokemonDomain> {
 
             override fun map(
                 count: Int,
                 next: String?,
                 previous: String?,
                 results: List<PokemonResult>
-            ): ResponseState{
+            ): PokemonDomain{
                 val mapper = PokemonResult.Mapper.ToDomain()
                 val listOfPokemon = results.map { it.map(mapper) }
-                val value = PokemonDomain.Base(listOfPokemon)
-                return ResponseState.Success(value)
+                return PokemonDomain.Base(listOfPokemon)
             }
         }
     }
