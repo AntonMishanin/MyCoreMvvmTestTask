@@ -12,9 +12,8 @@ class PokemonAdapter(
 
         fun provide(): PokemonAdapter {
             val exceptionChain = ViewHolderFactoryChain.Exception<ItemUi>()
-            val serverErrorChain = ServerErrorViewHolderFactoryChain(exceptionChain)
-            val noInternetErrorChain = NoInternetErrorViewHolderFactoryChain(serverErrorChain)
-            val emptyChain = EmptyViewHolderFactoryChain(noInternetErrorChain)
+            val errorChain = ErrorViewHolderFactoryChain(exceptionChain)
+            val emptyChain = EmptyViewHolderFactoryChain(errorChain)
             val progressChain = ProgressViewHolderFactoryChain(emptyChain)
             val pokemonChain = PokemonViewHolderFactoryChain(progressChain)
             return PokemonAdapter(pokemonChain)
