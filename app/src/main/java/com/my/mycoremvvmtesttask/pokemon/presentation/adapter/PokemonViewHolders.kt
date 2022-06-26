@@ -21,17 +21,21 @@ class PokemonViewHolder(parent: ViewGroup) : AbstractViewHolder(parent, R.layout
     }
 }
 
-class NoInternetErrorViewHolder(
+class ErrorViewHolder(
     parent: ViewGroup
-) : RefreshViewHolder(parent, R.layout.item_no_internet_error)
+) : AbstractViewHolder(parent, R.layout.item_error) {
+
+    override fun bind(item: ItemUi) {
+        item.show(
+            itemView.findViewById<MyButton>(R.id.refresh),
+            itemView.findViewById<MyTextView>(R.id.text)
+        )
+    }
+}
 
 class ProgressViewHolder(
     parent: ViewGroup
 ) : AbstractViewHolder(parent, R.layout.item_progress)
-
-class ServerErrorViewHolder(
-    parent: ViewGroup
-) : RefreshViewHolder(parent, R.layout.item_server_error)
 
 abstract class RefreshViewHolder(
     parent: ViewGroup,
