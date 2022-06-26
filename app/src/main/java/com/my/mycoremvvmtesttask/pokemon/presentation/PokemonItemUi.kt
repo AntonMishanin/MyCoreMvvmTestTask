@@ -1,5 +1,6 @@
 package com.my.mycoremvvmtesttask.pokemon.presentation
 
+import com.github.johnnysc.coremvvm.core.Mapper
 import com.github.johnnysc.coremvvm.presentation.adapter.ItemUi
 import com.github.johnnysc.coremvvm.presentation.adapter.MyView
 
@@ -22,38 +23,30 @@ data class PokemonItemUi(
     override fun type() = 4
 }
 
-class NoInternetErrorItemUi(
-    private val refreshPokemon: RefreshPokemon
+class ErrorItemUi(
+    private val refreshPokemon: RefreshPokemon,
+    private val errorMessage: String
 ) : ItemUi {
 
     override fun content() = id()
 
-    override fun id() = "NoInternetError"
+    override fun id() = "ItemError"
 
     override fun show(vararg views: MyView) {
         views[0].handleClick {
             refreshPokemon.refreshPokemon()
         }
+        views[1].show(errorMessage)
     }
 
     override fun type() = 3
-}
 
-class ServerErrorItemUi(
-    private val refreshPokemon: RefreshPokemon
-) : ItemUi {
+    class BaseMapper(
+        private val refreshPokemon: RefreshPokemon
+    ) : Mapper<String, List<ItemUi>> {
 
-    override fun content() = id()
-
-    override fun id() = "ServerError"
-
-    override fun show(vararg views: MyView) {
-        views[0].handleClick {
-            refreshPokemon.refreshPokemon()
-        }
+        override fun map(data: String) = listOf(ErrorItemUi(refreshPokemon, data))
     }
-
-    override fun type() = 2
 }
 
 class ProgressItemUi : ItemUi {
@@ -65,6 +58,11 @@ class ProgressItemUi : ItemUi {
     override fun show(vararg views: MyView) = Unit
 
     override fun type() = 1
+
+    class BaseMapper : Mapper<Unit, List<ItemUi>> {
+
+        override fun map(data: Unit) = listOf(ProgressItemUi())
+    }
 }
 
 class EmptyItemUi(

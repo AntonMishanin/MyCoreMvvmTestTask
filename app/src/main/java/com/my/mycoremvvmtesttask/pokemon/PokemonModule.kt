@@ -1,5 +1,6 @@
 package com.my.mycoremvvmtesttask.pokemon
 
+import com.github.johnnysc.coremvvm.presentation.HandleUiError
 import com.github.johnnysc.coremvvm.sl.CoreModule
 import com.github.johnnysc.coremvvm.sl.Module
 import com.my.mycoremvvmtesttask.pokemon.data.DataModule
@@ -15,18 +16,8 @@ class PokemonModule(
         val pokemonRepository = DataModule(coreModule).provideRepository()
         val paginationConfig = PaginationConfig.Base()
         val dispatchers = coreModule.dispatchers()
-
-        val pokemonCommunication = PokemonCommunication.Base()
-        val refreshPokemon = RefreshPokemon.Base()
-
-        val handleUiError = HandleUiError(
-            pokemonCommunication,
-            refreshPokemon,
-            com.github.johnnysc.coremvvm.presentation.HandleUiError(
-                coreModule,
-                coreModule.provideGlobalErrorCommunication()
-            )
-        )
+        val errorCommunication = ErrorCommunication()
+        val handleUiError = HandleUiError(coreModule, errorCommunication)
         val pokemonInteractor = PokemonInteractor.Base(
             pokemonRepository,
             paginationConfig,
@@ -35,14 +26,21 @@ class PokemonModule(
         )
 
         val deletePokemon = DeletePokemon.Base()
+        val refreshPokemon = RefreshPokemon.Base()
         val pokemonUiMapper = BasePokemonUiMapper(refreshPokemon, deletePokemon)
+        val errorMapper = ErrorItemUi.BaseMapper(refreshPokemon)
+        val progressMapper = ProgressItemUi.BaseMapper()
+        val pokemonCommunication = PokemonCommunication.Base()
         return PokemonViewModel(
             refreshPokemon,
             deletePokemon,
             pokemonUiMapper,
+            errorMapper,
+            progressMapper,
             pokemonInteractor,
             coreModule.provideCanGoBack(),
             dispatchers,
+            errorCommunication,
             pokemonCommunication
         )
     }
