@@ -1,5 +1,6 @@
 package com.my.mycoremvvmtesttask.pokemon.data
 
+import com.github.johnnysc.coremvvm.core.Matches
 import com.google.gson.annotations.SerializedName
 import com.my.mycoremvvmtesttask.pokemon.domain.PokemonDomain
 
@@ -65,7 +66,7 @@ interface PokemonResponse {
                 next: String?,
                 previous: String?,
                 results: List<PokemonResult>
-            ): PokemonDomain{
+            ): PokemonDomain {
                 val mapper = PokemonResult.Mapper.ToDomain()
                 val listOfPokemon = results.map { it.map(mapper) }
                 return PokemonDomain.Base(listOfPokemon)
@@ -74,11 +75,9 @@ interface PokemonResponse {
     }
 }
 
-interface PokemonResult {
+interface PokemonResult : Matches<String> {
 
     fun <T : Any> map(mapper: Mapper<T>): T
-
-    fun matches(name: String): Boolean
 
     data class Base(
         @SerializedName("name")
@@ -91,8 +90,8 @@ interface PokemonResult {
             return mapper.map(name, url)
         }
 
-        override fun matches(name: String): Boolean {
-            return this.name == name
+        override fun matches(data: String): Boolean {
+            return this.name == data
         }
     }
 
