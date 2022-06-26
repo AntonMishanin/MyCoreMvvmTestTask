@@ -30,8 +30,8 @@ class PokemonViewModel(
         override fun canGoBack() = canGoBack
     }
 
-    private val result: suspend (PokemonDomain) -> Unit = { responseState ->
-        val uiState = responseState.map(pokemonUiMapper)
+    private val result: suspend (PokemonDomain) -> Unit = { pokemonDomain ->
+        val uiState = pokemonDomain.map(pokemonUiMapper)
         communication.map(uiState)
     }
 
